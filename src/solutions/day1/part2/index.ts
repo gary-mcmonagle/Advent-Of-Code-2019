@@ -2,9 +2,9 @@ import {readFileSync} from "fs";
 
 const fuelRequiredToLaunch = (mass: number) => {
   let requiredFuel = 0;
-  while (true){
+  while (true) {
     const fuelNeeded = (Math.floor(mass / 3)) - 2;
-    if(fuelNeeded <= 0) return requiredFuel;
+    if (fuelNeeded <= 0) { return requiredFuel; }
     requiredFuel += fuelNeeded;
     mass = fuelNeeded;
   }

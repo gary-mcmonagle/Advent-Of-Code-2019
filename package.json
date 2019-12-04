@@ -6,8 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "day1p1": "tsc && node ./dist/day1/part1/index.js",
-    "day1p2": "tsc && node ./dist/day1/part2/index.js"
-
+    "day1p2": "tsc && node ./dist/day1/part2/index.js",
+    "day2p1": "tsc && node ./dist/day2/part1/index.js",
+    "day2p2": "tsc && node ./dist/day2/part2/index.js",
+    "day3p1": "tsc && node ./dist/day3/part1/index.js",
+    "day3p2": "tsc && node ./dist/day3/part2/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +19,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@types/node": "^12.12.14"
+    "@types/node": "^12.12.14",
+    "lodash": "^4.17.15"
   }
 }
