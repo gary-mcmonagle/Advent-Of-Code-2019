@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint --config ./tslint.json --project ./tsconfig.json --force --format stylish --fix",
     "day1p1": "tsc && node ./dist/day1/part1/index.js",
     "day1p2": "tsc && node ./dist/day1/part2/index.js",
     "day2p1": "tsc && node ./dist/day2/part1/index.js",
     "day2p2": "tsc && node ./dist/day2/part2/index.js",
     "day3p1": "tsc && node ./dist/day3/part1/index.js",
-    "day3p2": "tsc && node ./dist/day3/part2/index.js"
+    "day3p2": "tsc && node ./dist/day3/part2/index.js",
+    "day4p1": "tsc && node ./dist/day4/part1/index.js",
+    "day4p2": "tsc && node ./dist/day4/part2/index.js"
   },
   "author": "",
   "license": "ISC",

@@ -15,7 +15,7 @@ const solve = () => {
   });
 
   const myGrid = new Grid(wires.map((w) => new Wire(w)));
-  const closest = Math.min(...myGrid.getCrossSections().map((cs) =>Math.abs(cs.xCord) + Math.abs(cs.yCord)));
+  const closest = Math.min(...myGrid.getCrossSections().map((cs) => Math.abs(cs.xCord) + Math.abs(cs.yCord)));
   console.log(closest);
 
 };
