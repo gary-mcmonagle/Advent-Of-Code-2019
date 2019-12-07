@@ -13,7 +13,11 @@
     "day3p1": "tsc && node ./dist/day3/part1/index.js",
     "day3p2": "tsc && node ./dist/day3/part2/index.js",
     "day4p1": "tsc && node ./dist/day4/part1/index.js",
-    "day4p2": "tsc && node ./dist/day4/part2/index.js"
+    "day4p2": "tsc && node ./dist/day4/part2/index.js",
+    "day5p1": "tsc && node ./dist/day5/part1/index.js",
+    "day6p1": "tsc && node ./dist/day6/part1/index.js",
+    "day6p2": "tsc && node ./dist/day6/part2/index.js"
+
   },
   "author": "",
   "license": "ISC",
