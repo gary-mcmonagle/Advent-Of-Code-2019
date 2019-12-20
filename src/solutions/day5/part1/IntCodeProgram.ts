@@ -1,89 +1,80 @@
-import {IntCodeMemory} from "./IntCodeMemory";
-import {IOptCode} from "./IOptCode";
+import { IntCodeMemory } from "./IntCodeMemory";
+import { Opcode } from "./Opcode";
+
 export class IntCodeProgram {
-  public requiredNoParams = {
-    1: 3,
-    2: 3,
-    3: 1,
-    4: 1,
-    99: 0,
+  private memory: IntCodeMemory;
+  private instructionPointer: number = 0;
+  private instructionLengths = {
+    1: 4,
+    2: 4,
+    3: 2,
+    4: 2,
+    99: 1,
   };
-  public memory: number[];
-  public currentInstructionIndex: number = 0;
-  public outputs: number[];
+  private output = [];
 
   constructor(initialMemoryState: number[]) {
-    this.memory = initialMemoryState;
-    // this.performInstruction()
+    this.memory = new IntCodeMemory(initialMemoryState);
+    let isExecuting = true;
+    while (isExecuting) {
+      isExecuting = this.executeNextInstruction();
+      console.log(this.output);
+    }
   }
 
-  public execute() {
-    let running = true;
-    // this.performInstruction()
-    let count = 0;
-    do {
-      console.log(this.memory[6]);
-      // console.log(this.currentInstructionIndex)
-      running = this.performInstruction();
-      count++;
-    }while (running && count <= 3);
-  }
-
-  private performInstruction() {
-    const opcode: IOptCode = this.parseCurrentOpcode();
-    if (opcode.id == 99) { return false; }
-    const params: number[] = this.getParams(opcode);
-    switch (opcode.id) {
+  private executeNextInstruction() {
+    console.log("index");
+    console.log(this.instructionPointer);
+    const opcode = this.parseOpcode();
+    const instructionLength = this.instructionLengths[opcode.executionId.toString()];
+    console.log(instructionLength);
+    const instruction = this.createInstruction(opcode, instructionLength);
+    console.log(`****Instruction****`);
+    console.log(instruction);
+    switch (instruction[0]) {
       case 1:
-        console.log(params);
-        this.memory[params[3]] = params[0] + params[1];
+        this.memory.updateAtAddress(instruction[3], instruction[1] + instruction[2]);
         break;
       case 2:
-        this.memory[params[3]] = params[0] + params[1];
+        this.memory.updateAtAddress(instruction[3], instruction[1] * instruction[2]);
         break;
-      case 3: this.memory[params[0]] = 3;
-              break;
-      case 4: this.outputs.push(params[0]);
-              break;
-      default:
-      console.log(this.currentInstructionIndex);
-      throw new Error(`Bad opcode recieved ${opcode.id}`);
+      case 3:
+        this.memory.updateAtAddress(instruction[1], 1);
+        break;
+      case 4:
+        this.output.push(instruction[1]);
+      case 99:
+        return false;
     }
-    this.currentInstructionIndex += params.length + 1;
+    this.instructionPointer += instructionLength;
     return true;
   }
 
-  private getParams(opcode: IOptCode) {
-    const numParams = this.requiredNoParams[opcode.id.toString()];
-    const params = [];
-    for (let i = 0; i < numParams; i++) {
-      const immediateValue = this.memory[this.currentInstructionIndex + (i + 1)];
-      if (opcode.paramModes[i] === 0) {
-        params.push(this.memory[immediateValue]);
-      } else if (opcode.paramModes[i] === 1) {
-        params.push(immediateValue);
-      } else {
-        throw new Error(`Bad param type received ${opcode.paramModes[i]}`);
-      }
-    }
-    params.forEach((p) => {
-      // let asBool = !!p
-      if (!p && p !== 0) { throw new Error(`bad p ${p}`); }
-    });
-    return params;
+  private parseOpcode() {
+    const formatted = this.formatRawOpcode(this.memory.getAtAddress(this.instructionPointer)).split("").map((f) => Number(f));
+    const executionId = Number(`${formatted[3]}${formatted[4]}`);
+    const paramModes = [formatted[0], formatted[1], formatted[3]];
+    return new Opcode(executionId, paramModes);
   }
 
-  private parseCurrentOpcode() {
-    let asString: string =  this.memory[this.currentInstructionIndex].toString();
-    do {
+  private formatRawOpcode(opcode: number) {
+    const neededLength = 5;
+    let asString = opcode.toString();
+    while (asString.length < neededLength) {
       asString = "0" + asString;
-    } while (asString.length < 5);
-    // console.log(asString)
-    const split = asString.split("").map((n) => Number(n));
-    const id = Number(`${split[3]}${split[4]}`);
-    const paramModes = [split[2], split[1], split[0]];
-    return {id, paramModes};
-
+    }
+    return asString;
   }
 
+  private createInstruction(opcode: Opcode, instructionLength: number) {
+    const instruction = [opcode.executionId];
+    // console.log(opcode.paramModes)
+    for (let i = 1; i < instructionLength; i++) {
+      const paramMode = opcode.paramModes[i - 1];
+      const immediate = this.memory.getAtAddress(this.instructionPointer + i);
+      if (paramMode === 0) { instruction.push(this.memory.getAtAddress(immediate)); }
+      if (paramMode === 1) { instruction.push(immediate); }
+    }
+    return instruction;
+  }
 }
